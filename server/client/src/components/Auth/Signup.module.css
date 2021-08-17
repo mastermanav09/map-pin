@@ -1,0 +1,85 @@
+.auth-in {
+  background: rgb(59, 58, 58);
+  border-radius: 15px;
+  width: 350px;
+  height: 28rem;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  color: aliceblue;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  cursor: default;
+  margin: auto;
+}
+
+.title {
+  padding-top: 30px;
+}
+
+.auth-username,
+.auth-password,
+.auth-email {
+  display: block;
+  text-align: center;
+  border: 2px solid rgb(50, 197, 255);
+  border-radius: 40px;
+  padding: 11px 30px;
+  width: 160px;
+  background: none;
+  margin: 2rem auto 1rem;
+  outline: 0;
+  transition: 0.25s;
+  color: aliceblue;
+}
+
+.signupSubmitBtn {
+  border: 2px solid rgb(17, 255, 96);
+  background: rgb(17, 255, 96);
+  color: aliceblue;
+  padding: 11px 20px;
+  border-radius: 40px;
+  width: 100px;
+  transition: 0.25s;
+  margin: auto;
+}
+
+.auth-username:hover,
+.auth-username:active,
+.auth-username:focus,
+.auth-email:hover,
+.auth-email:active,
+.auth-email:focus,
+.auth-password:hover,
+.auth-password:active,
+.auth-password:focus {
+  width: 200px;
+  outline: 0;
+}
+
+.signupSubmitBtn:hover {
+  cursor: pointer;
+  width: 120px;
+}
+
+.signupCancel {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  cursor: pointer;
+}
+
+.failure {
+  margin: 5px auto;
+  font-size: 1rem;
+  color: rgb(243, 112, 112);
+  text-align: center;
+}
+
+.success {
+  font-size: 1rem;
+  color: rgb(158, 207, 79);
+  text-align: center;
+}
