@@ -24,9 +24,8 @@ app.use((req, res, next) => {
   next();
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-}
+app.use("/api/users", userRoute);
+app.use("/api/pins", pinRoute);
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -36,8 +35,9 @@ mongoose
   .then(() => console.log("MongoDB connected!"))
   .catch((err) => console.log(err));
 
-app.use("/api/users", userRoute);
-app.use("/api/pins", pinRoute);
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("Backend server is running!");
