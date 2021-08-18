@@ -1,21 +1,56 @@
 .card {
-  width: 250px;
-  height: 250px;
+  width: 16rem;
+  max-height: 20rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  word-wrap: break-word;
+  cursor: default;
+}
+
+.instruct {
+  position: absolute;
+  top: 5rem;
+  left: 1rem;
+  z-index: 5;
+  color: white;
+  padding: 0.3rem;
+  background-color: rgb(113, 165, 93, 0.4);
+  display: flex;
+  justify-content: end;
+}
+
+.instruct span {
+  margin: 0 0.36rem;
+  display: flex;
+  justify-self: end;
 }
 
 label {
   width: max-content;
   color: tomato;
-  font-size: 13px;
+  font-size: 14px;
   border-bottom: 0.5px solid tomato;
-  margin: 3px 0;
+  margin: 5px 0;
 }
 
 .desc {
-  font-size: 14px;
+  font-size: 15px;
+  padding-right: 0.5rem;
+  overflow-y: auto;
+}
+
+.desc::-webkit-scrollbar {
+  width: 5px;
+}
+
+.desc::-webkit-scrollbar-track {
+  background-color: rgb(233, 162, 149);
+  border-radius: 10px;
+}
+
+.desc::-webkit-scrollbar-thumb {
+  background-color: tomato;
+  border-radius: 10px;
 }
 
 .star {
@@ -23,25 +58,35 @@ label {
 }
 
 .username {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .date {
-  font-size: 12px;
+  font-size: 13px;
+}
+
+.input-form {
+  max-height: 22rem;
+  width: 16rem;
 }
 
 form {
-  width: 250px;
-  height: 250px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   color: rgb(88, 87, 87);
 }
 
 input {
   border: none;
   border-bottom: 1px solid gray;
+}
+
+form label {
+  margin: 0.6rem 0 0.2rem;
+}
+
+select {
+  margin: 0.5rem 0 0.3rem;
 }
 
 input::placeholder,
@@ -59,9 +104,11 @@ select:focus {
 textarea {
   border: none;
   border-bottom: 1px solid gray;
+  resize: none;
 }
 
 .submitButton {
+  margin: 0.8rem 0 0.2rem;
   border: none;
   padding: 5px;
   border-radius: 5px;
@@ -81,4 +128,14 @@ textarea {
 
 .register {
   background-color: slateblue;
+}
+
+@media (max-width: 480px) {
+  .instruct {
+    font-size: 0.75rem;
+  }
+
+  .instruct span * {
+    font-size: 1rem;
+  }
 }

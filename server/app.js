@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const userRoute = require("./routes/auth");
 const pinRoute = require("./routes/pins");
-
+const path = require("path");
 dotenv.config();
 
 app.use(express.json());
@@ -24,8 +24,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", userRoute);
-app.use("/api/pins", pinRoute);
+app.use("/users", userRoute);
+app.use("/pins", pinRoute);
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -36,7 +36,7 @@ mongoose
   .catch((err) => console.log(err));
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
+  app.use(express.static(path.join(__dirname, "client", "build")));
 }
 
 app.listen(process.env.PORT || 8080, () => {

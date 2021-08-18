@@ -22,13 +22,12 @@ export default function Login() {
       password: passwordRef.current.value,
     };
     try {
-      const res = await axios.post(
-        "http://localhost:8080/api/users/login",
-        user
-      );
+      const res = await axios.post("/users/login", user);
 
-      authContext.setUsername(res.data.username);
       localStorage.setItem("userId", res.data._id);
+      localStorage.setItem("username", res.data.username);
+      authContext.setUsername(res.data.username);
+      authContext.setCurrentUserId(localStorage.getItem("userId"));
 
       authContext.setShowLogin(false);
     } catch (err) {

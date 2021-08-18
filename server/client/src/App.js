@@ -1,30 +1,42 @@
 import "./app.css";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Room, Star } from "@material-ui/icons";
 import axios from "axios";
 import { format } from "timeago.js";
 import Register from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
 import AuthContext from "./components/store/auth-context";
+import dotenv from "dotenv";
+import mapboxgl from "mapbox-gl";
+
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass =require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
+dotenv.config();
 
 function App() {
   const authContext = useContext(AuthContext);
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
-  const [title, setTitle] = useState(null);
-  const [desc, setDesc] = useState(null);
-  const [star, setStar] = useState(0);
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [star, setStar] = useState(1);
   const [viewport, setViewport] = useState({
     latitude: 47.040182,
     longitude: 17.071727,
     zoom: 4,
   });
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const handleMarkerClick = (id, lat, long) => {
     setCurrentPlaceId(id);
     setViewport({ ...viewport, latitude: lat, longitude: long });
+  };
+
+  const onFocusErrorRemove = () => {
+    setErrorMsg(null);
   };
 
   const handleAddClick = (e) => {
@@ -37,6 +49,13 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (title.trim() === "" || desc.trim() === "") {
+      setErrorMsg("Please fill all details.");
+      return;
+    }
+
+    setErrorMsg(null);
     const newPin = {
       username: authContext.currentUsername,
       title,
@@ -47,18 +66,22 @@ function App() {
     };
 
     try {
-      const res = await axios.post("http://localhost:8080/api/pins", newPin);
+      const res = await axios.post("/pins", newPin);
       setPins([...pins, res.data]);
       setNewPlace(null);
     } catch (err) {
       console.log(err);
     }
+
+    setTitle("");
+    setDesc("");
+    setStar(1);
   };
 
   useEffect(() => {
     const getPins = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/pins");
+        const res = await axios.get("/pins");
         setPins(res.data);
       } catch (err) {
         console.log(err);
@@ -69,18 +92,26 @@ function App() {
 
   return (
     <div style={{ height: "92.5vh", width: "100%" }}>
+      {authContext.currentUserId && (
+        <div className="instruct">
+          <span>
+            <Room />
+          </span>
+          Double click to add a new pin
+        </div>
+      )}
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         width="100%"
         height="100%"
         transitionDuration="200"
-        mapStyle="mapbox://styles/manavnaharwal/ckrrvwg1e5mh918nkb7sifnig"
+        mapStyle="mapbox://styles/manavnaharwal/cksgkimbe6t2018rh5f7rx66q"
         onViewportChange={(viewport) => setViewport(viewport)}
-        onDblClick={authContext.currentUsername && handleAddClick}
+        onDblClick={authContext.currentUserId && handleAddClick}
       >
         {pins.map((p) => (
-          <>
+          <React.Fragment key={p._id}>
             <Marker
               latitude={p.lat}
               longitude={p.long}
@@ -101,7 +132,6 @@ function App() {
             </Marker>
             {p._id === currentPlaceId && (
               <Popup
-                key={p._id}
                 latitude={p.lat}
                 longitude={p.long}
                 closeButton={true}
@@ -116,9 +146,12 @@ function App() {
                   <p className="desc">{p.desc}</p>
                   <label>Rating</label>
                   <div className="stars">
-                    {Array(p.rating).fill(<Star className="star" />)}
+                    {Array(p.rating)
+                      .fill(<Star className="star" />)
+                      .map((star, index) => (
+                        <Star className="star" key={index} />
+                      ))}
                   </div>
-                  <label>Information</label>
                   <span className="username">
                     Created by <b>{p.username}</b>
                   </span>
@@ -126,7 +159,7 @@ function App() {
                 </div>
               </Popup>
             )}
-          </>
+          </React.Fragment>
         ))}
         {newPlace && (
           <>
@@ -152,8 +185,11 @@ function App() {
               onClose={() => setNewPlace(null)}
               anchor="bottom"
             >
-              <div>
-                <form onSubmit={handleSubmit}>
+              <div className="input-form">
+                <div style={{ color: "red", textAlign: "center" }}>
+                  {errorMsg}
+                </div>
+                <form onSubmit={handleSubmit} onFocus={onFocusErrorRemove}>
                   <label>Title</label>
                   <input
                     placeholder="Enter a title"
@@ -164,6 +200,7 @@ function App() {
                   <textarea
                     placeholder="Say us something about this place."
                     onChange={(e) => setDesc(e.target.value)}
+                    rows="5"
                   />
                   <label>Rating</label>
                   <select onChange={(e) => setStar(e.target.value)}>
@@ -188,5 +225,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

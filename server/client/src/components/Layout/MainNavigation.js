@@ -8,7 +8,9 @@ function MainNavigation() {
 
   const handleLogout = () => {
     authContext.setUsername(null);
+    authContext.setCurrentUserId(null);
     localStorage.removeItem("userId");
+    localStorage.removeItem("username");
   };
 
   return (

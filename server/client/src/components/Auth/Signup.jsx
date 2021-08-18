@@ -26,7 +26,7 @@ export default function Register() {
     };
 
     try {
-      await axios.put("http://localhost:8080/api/users/signup", newUser);
+      await axios.put("/users/signup", newUser);
       setError(false);
       setSuccess(true);
     } catch (err) {
